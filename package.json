@@ -1,6 +1,6 @@
 {
   "name": "serverless-plugin-resource-deep-merge",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Serverless plugin which allows to modify CloudFormation templates",
   "main": "index.js",
   "scripts": {

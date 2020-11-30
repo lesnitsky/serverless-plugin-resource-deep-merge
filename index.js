@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const deepmerge = require('deepmerge');
 
 class ResourceDeepMerge {
@@ -14,10 +16,18 @@ class ResourceDeepMerge {
     if (!service.custom) return;
     if (!service.custom.mergeResources) return;
 
-    service.provider.compiledCloudFormationTemplate.Resources = deepmerge(
-      service.provider.compiledCloudFormationTemplate.Resources,
-      service.custom.mergeResources
-    );
+    let Resources = service.provider.compiledCloudFormationTemplate.Resources;
+
+    Resources = deepmerge(Resources, service.custom.mergeResources);
+
+    const cwd = process.cwd();
+
+    if (fs.readdirSync(cwd).indexOf('resource-merge.js') != -1) {
+      const merger = require(path.resolve(path.join(cwd, 'resource-merge.js')));
+      Resources = merger(Resources);
+    }
+
+    service.provider.compiledCloudFormationTemplate.Resources = Resources;
   };
 }
 
